@@ -1,0 +1,9 @@
+# Backup lokal sebelum implementasi scroll sequence — digantikan oleh riwayat git
+index.html.backup-before-scroll-sequence
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/

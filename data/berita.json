@@ -1,0 +1,10 @@
+{
+  "items": [
+    {
+      "judul": "Contoh Berita Pertama",
+      "tanggal": "2026-08-21",
+      "ringkasan": "Ganti atau hapus lewat panel admin di /admin/.",
+      "gambar": "/preview.png"
+    }
+  ]
+}

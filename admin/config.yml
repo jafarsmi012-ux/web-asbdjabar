@@ -1,0 +1,52 @@
+backend:
+  name: git-gateway
+  branch: main
+media_folder: images/uploads
+public_folder: /images/uploads
+locale: id
+
+collections:
+  - name: hero
+    label: Hero (Gambar Utama)
+    files:
+      - name: hero
+        label: Gambar Hero
+        file: data/hero.json
+        format: json
+        fields:
+          - {name: gambar, label: Gambar Hero, widget: image}
+
+  - name: berita
+    label: Berita
+    files:
+      - name: berita
+        label: Daftar Berita
+        file: data/berita.json
+        format: json
+        fields:
+          - name: items
+            label: Berita
+            widget: list
+            summary: '{{fields.judul}}'
+            fields:
+              - {name: judul, label: Judul, widget: string}
+              - {name: tanggal, label: Tanggal, widget: date, format: YYYY-MM-DD}
+              - {name: ringkasan, label: Ringkasan, widget: text}
+              - {name: gambar, label: Gambar, widget: image}
+
+  - name: galeri
+    label: Galeri
+    files:
+      - name: galeri
+        label: Foto Galeri
+        file: data/galeri.json
+        format: json
+        fields:
+          - name: items
+            label: Foto
+            widget: list
+            summary: '{{fields.judul}}'
+            fields:
+              - {name: judul, label: Judul, widget: string}
+              - {name: keterangan, label: Keterangan, widget: string}
+              - {name: gambar, label: Gambar, widget: image}
