@@ -1,0 +1,12 @@
+/asbd/hero/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/uploads/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/data/*
+  Cache-Control: public, max-age=60, must-revalidate
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

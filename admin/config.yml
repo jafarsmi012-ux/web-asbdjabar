@@ -1,6 +1,8 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: jafarsmi012-ux/web-asbdjabar
   branch: main
+  base_url: https://GANTI.workers.dev    # Worker OAuth, lihat CATATAN-DEPLOY.md
 media_folder: images/uploads
 public_folder: /images/uploads
 locale: id
@@ -50,3 +52,38 @@ collections:
               - {name: judul, label: Judul, widget: string}
               - {name: keterangan, label: Keterangan, widget: string}
               - {name: gambar, label: Gambar, widget: image}
+
+  - name: sejarah
+    label: Sejarah
+    files:
+      - name: sejarah
+        label: Linimasa Sejarah
+        file: data/sejarah.json
+        format: json
+        fields:
+          - name: items
+            label: Milestone
+            widget: list
+            summary: '{{fields.tahun}} — {{fields.judul}}'
+            fields:
+              - {name: tahun, label: Tahun, widget: string, hint: 'contoh: 1998 atau 2010-2015'}
+              - {name: judul, label: Judul, widget: string}
+              - {name: keterangan, label: Keterangan, widget: text}
+              - {name: gambar, label: Gambar (opsional), widget: image, required: false}
+
+  - name: partner
+    label: Sekolah Mitra
+    files:
+      - name: partner
+        label: Daftar Sekolah Mitra
+        file: data/partner.json
+        format: json
+        fields:
+          - name: items
+            label: Sekolah
+            widget: list
+            summary: '{{fields.nama}}'
+            fields:
+              - {name: nama, label: Nama Sekolah, widget: string}
+              - {name: logo, label: Logo (opsional, kosongkan bila belum ada izin), widget: image, required: false}
+              - {name: url, label: Situs Sekolah (opsional), widget: string, required: false}
