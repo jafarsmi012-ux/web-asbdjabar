@@ -1,11 +1,34 @@
 {
   "items": [
-    {"nama": "SD Islam Al Azhar 36 Bandung", "logo": "", "url": "https://sdia36.al-azhar.sch.id/"},
-    {"nama": "Al Azhar 30 Bandung", "logo": "", "url": "https://www.alazhar30bandung.sch.id/"},
-    {"nama": "SD Islam Al Azhar 62 Summarecon Bandung", "logo": "", "url": "https://alazharsummarecon.sch.id/bandung/"},
-    {"nama": "SMP Islam Al Azhar 42 Summarecon Bandung", "logo": "", "url": "https://alazharsummarecon.sch.id/bandung/"},
-    {"nama": "SMA Islam Al Azhar Summarecon Bandung", "logo": "", "url": "https://alazharsummarecon.sch.id/bandung/"},
-    {"nama": "Al Azhar 64 Podomoro Bandung", "logo": "", "url": "https://www.alazhar64podomoro.sch.id/"},
-    {"nama": "Sekolah Islam Al-Azhar Cairo Bandung", "logo": "", "url": ""}
+    {
+      "nama": "SD Islam Al Azhar 36 Bandung",
+      "logo": "",
+      "url": "https://sdia36.al-azhar.sch.id/"
+    },
+    {
+      "nama": "Al Azhar 30 Bandung",
+      "logo": "",
+      "url": "https://www.alazhar30bandung.sch.id/"
+    },
+    {
+      "nama": "SD Islam Al Azhar 62 Summarecon Bandung",
+      "logo": "",
+      "url": "https://alazharsummarecon.sch.id/bandung/"
+    },
+    {
+      "nama": "SMP Islam Al Azhar 42 Summarecon Bandung",
+      "logo": "",
+      "url": "https://alazharsummarecon.sch.id/bandung/"
+    },
+    {
+      "nama": "SMA Islam Al Azhar Summarecon Bandung",
+      "logo": "",
+      "url": "https://alazharsummarecon.sch.id/bandung/"
+    },
+    {
+      "nama": "Al Azhar 64 Podomoro Bandung",
+      "logo": "",
+      "url": "https://www.alazhar64podomoro.sch.id/"
+    }
   ]
 }
