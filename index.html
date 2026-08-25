@@ -469,9 +469,22 @@
 </div>
 </div>
 
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 <div>
 <label class="block font-label-bold text-label-bold text-on-surface mb-2" for="f-cabang">Cabang Latihan yang Dituju</label>
 <input class="w-full px-4 py-3 rounded-lg bg-surface-container border border-outline-variant/40 text-on-surface font-body-md text-body-md focus:outline-none focus:border-secondary-fixed transition-colors" id="f-cabang" name="cabang_latihan" placeholder="mis. Bandung — Palasari" type="text"/>
+</div>
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface mb-2" for="f-goldar">Golongan Darah</label>
+<select class="w-full px-4 py-3 rounded-lg bg-surface-container border border-outline-variant/40 text-on-surface font-body-md text-body-md focus:outline-none focus:border-secondary-fixed transition-colors" id="f-goldar" name="golongan_darah">
+<option value="">— pilih —</option>
+<option value="A">A</option>
+<option value="B">B</option>
+<option value="AB">AB</option>
+<option value="O">O</option>
+<option value="Belum diketahui">Belum diketahui</option>
+</select>
+</div>
 </div>
 
 <fieldset class="border-t border-outline-variant/20 pt-5 space-y-5">
@@ -1018,6 +1031,7 @@ const FORM_ACCESS_KEY = 'GANTI-DENGAN-ACCESS-KEY';
       'Tanggal lahir: ' + (d.get('tanggal_lahir') || '-'),
       'Sekolah/kelas: ' + (d.get('sekolah_kelas') || '-'),
       'Cabang latihan: ' + (d.get('cabang_latihan') || '-'),
+      'Golongan darah: ' + (d.get('golongan_darah') || '-'),
       'Nama wali: ' + (d.get('nama_wali') || '-'),
       'WhatsApp wali: ' + (d.get('hp_wali') || '-'),
     ];
