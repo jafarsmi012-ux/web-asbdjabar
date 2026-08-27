@@ -13,33 +13,30 @@ logo_url: /admin/logo.svg
 
 collections:
   - name: pengumuman
-    label: Pengumuman (Banner)
+    label: Pengumuman
+    description: >
+      Bar tipis di paling atas semua halaman. Isi lengkap (poster, teks
+      panjang, tombol) muncul di pop-up saat pengunjung klik "Selengkapnya".
+      Matikan "Tayangkan" atau lewati tanggal untuk menyembunyikannya.
     files:
       - name: pengumuman
-        label: Banner Pengumuman
+        label: Isi Pengumuman
         file: data/pengumuman.json
         format: json
         fields:
-          - {name: aktif, label: 'Tampilkan bar di situs?', widget: boolean, default: false}
+          - {name: aktif, label: 'Tayangkan pengumuman?', widget: boolean, default: false}
           - {name: judul, label: Judul (tampil di bar), widget: string, required: false, hint: 'singkat, mis. Pendaftaran UKT 2026 dibuka'}
-          - {name: teks, label: Isi lengkap (opsional), widget: text, required: false, hint: 'Tampil di pop-up saat "Selengkapnya" diklik'}
-          - {name: gambar, label: Poster (opsional), widget: image, required: false, hint: 'Tampil di pop-up. Kompres < 300 KB'}
+          - {name: teks, label: Isi lengkap (opsional), widget: text, required: false, hint: 'Tampil di pop-up "Selengkapnya"'}
+          - {name: gambar, label: Poster (opsional), widget: image, required: false, hint: 'Tampil di pop-up. Kompres < 300 KB, lebar ~1000px'}
           - {name: tautan_label, label: Teks tombol (opsional), widget: string, required: false, hint: 'mis. Daftar Sekarang'}
-          - {name: tautan_url, label: Tujuan tombol (opsional), widget: string, required: false, hint: 'mis. #daftar'}
-          - {name: berlaku_sampai, label: Tampil sampai tanggal (opsional), widget: date, format: YYYY-MM-DD, required: false, hint: 'Bar otomatis hilang setelah tanggal ini'}
-
-  - name: hero
-    label: Hero (Gambar Utama)
-    files:
-      - name: hero
-        label: Gambar Hero
-        file: data/hero.json
-        format: json
-        fields:
-          - {name: gambar, label: Gambar Hero, widget: image}
+          - {name: tautan_url, label: Tujuan tombol (opsional), widget: string, required: false, hint: 'mis. #daftar (bagian di beranda) atau https://...'}
+          - {name: berlaku_sampai, label: Tampil sampai tanggal (opsional), widget: date, format: YYYY-MM-DD, required: false, hint: 'Pengumuman otomatis hilang setelah tanggal ini'}
 
   - name: berita
     label: Berita
+    description: >
+      Kartu berita di beranda (bagian "Berita Terkini"). Yang terbaru tampil
+      lebih dulu. Hapus semua berita untuk menyembunyikan bagian ini.
     files:
       - name: berita
         label: Daftar Berita
@@ -48,16 +45,20 @@ collections:
         fields:
           - name: items
             label: Berita
+            label_singular: Berita
             widget: list
-            summary: '{{fields.judul}}'
+            summary: '{{fields.tanggal}} · {{fields.judul}}'
             fields:
               - {name: judul, label: Judul, widget: string}
               - {name: tanggal, label: Tanggal, widget: date, format: YYYY-MM-DD}
-              - {name: ringkasan, label: Ringkasan, widget: text}
-              - {name: gambar, label: Gambar, widget: image}
+              - {name: ringkasan, label: Ringkasan, widget: text, hint: '1–3 kalimat'}
+              - {name: gambar, label: Gambar (opsional), widget: image, required: false, hint: 'Kompres < 300 KB, lebar ~1000px'}
 
   - name: galeri
     label: Galeri
+    description: >
+      Foto di carousel "Galeri Aksi" di beranda. Judul & keterangan opsional —
+      muncul saat foto disentuh / di-hover.
     files:
       - name: galeri
         label: Foto Galeri
@@ -66,44 +67,66 @@ collections:
         fields:
           - name: items
             label: Foto
+            label_singular: Foto
             widget: list
             summary: '{{fields.judul}}'
             fields:
+              - {name: gambar, label: Gambar, widget: image, hint: 'Kompres dulu ke JPG/WebP < 300 KB, lebar ~1000px'}
               - {name: judul, label: Judul (opsional), widget: string, required: false}
               - {name: keterangan, label: Keterangan (opsional), widget: string, required: false}
-              - {name: gambar, label: Gambar, widget: image, hint: 'Kompres dulu ke JPG/WebP < 300 KB, lebar ~1000px'}
 
   - name: sejarah
     label: Sejarah
+    description: >
+      Linimasa "Sejarah ASBD" di beranda. Urutan mengikuti daftar di sini
+      (paling atas = paling lama). Hapus semua untuk menyembunyikan bagian ini.
     files:
       - name: sejarah
-        label: Linimasa Sejarah
+        label: Linimasa
         file: data/sejarah.json
         format: json
         fields:
           - name: items
-            label: Milestone
+            label: Peristiwa
+            label_singular: Peristiwa
             widget: list
             summary: '{{fields.tahun}} — {{fields.judul}}'
             fields:
-              - {name: tahun, label: Tahun, widget: string, hint: 'contoh: 1998 atau 2010-2015'}
+              - {name: tahun, label: Tahun, widget: string, hint: 'mis. 1998 atau 2010–2015'}
               - {name: judul, label: Judul, widget: string}
               - {name: keterangan, label: Keterangan, widget: text}
-              - {name: gambar, label: Gambar (opsional), widget: image, required: false}
+              - {name: gambar, label: Gambar (opsional), widget: image, required: false, hint: 'Kompres < 300 KB'}
 
   - name: partner
     label: Sekolah Mitra
+    description: >
+      Logo sekolah di bagian "Sekolah Mitra" beranda. Bila logo dikosongkan,
+      nama sekolah tampil sebagai teks. Hapus semua untuk menyembunyikan bagian ini.
     files:
       - name: partner
-        label: Daftar Sekolah Mitra
+        label: Daftar Sekolah
         file: data/partner.json
         format: json
         fields:
           - name: items
             label: Sekolah
+            label_singular: Sekolah
             widget: list
             summary: '{{fields.nama}}'
             fields:
               - {name: nama, label: Nama Sekolah, widget: string}
-              - {name: logo, label: Logo (opsional, kosongkan bila belum ada izin), widget: image, required: false}
-              - {name: url, label: Situs Sekolah (opsional), widget: string, required: false}
+              - {name: logo, label: Logo (opsional), widget: image, required: false, hint: 'Kosongkan bila belum ada izin pakai. PNG transparan, < 200 KB'}
+              - {name: url, label: Situs Sekolah (opsional), widget: string, required: false, hint: 'sertakan https://'}
+
+  - name: hero
+    label: Gambar Hero
+    description: >
+      Gambar besar di puncak beranda. Ini CADANGAN — hanya tampil bila animasi
+      hero gagal dimuat. Mengganti animasi hero-nya sendiri perlu bantuan teknis.
+    files:
+      - name: hero
+        label: Gambar Hero
+        file: data/hero.json
+        format: json
+        fields:
+          - {name: gambar, label: Gambar Hero (cadangan), widget: image, hint: 'Lanskap, lebar ~1600px. Kompres < 400 KB'}

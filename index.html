@@ -299,7 +299,7 @@
 </div>
 </section>
 <!-- Berita -->
-<section class="py-16 md:py-section-gap-lg bg-surface" id="berita">
+<section class="py-16 md:py-section-gap-lg bg-surface hidden" id="berita">
 <div class="container max-w-container-max mx-auto px-margin-mobile md:px-gutter">
 <h2 class="font-headline-xl text-headline-xl-mobile md:text-headline-xl text-on-surface uppercase tracking-tight mb-2" data-reveal>Berita <span class="text-secondary-fixed">Terkini</span></h2>
 <p class="font-body-md text-body-md text-on-surface-variant mb-8 md:mb-12" data-reveal>Kabar terbaru dari ASBD Jawa Barat.</p>
@@ -1096,18 +1096,19 @@ fetch('data/partner.json').then(r => r.json()).then(({items}) => {
   if (window.revealScan) window.revealScan(sec);
 });
 fetch('data/berita.json').then(r => r.json()).then(({items}) => {
+  if (!items || !items.length) return;   // kosong: section tetap tersembunyi
+  items.sort((a, b) => String(b.tanggal).localeCompare(String(a.tanggal)));  // terbaru dulu
   document.getElementById('berita-grid').innerHTML = items.map(i => `
     <article class="bg-surface-container rounded-lg overflow-hidden border border-outline-variant/20">
-      <img class="w-full h-48 object-cover" loading="lazy" src="${esc(i.gambar)}" alt="${esc(i.judul)}">
+      ${i.gambar ? `<img class="w-full h-48 object-cover" loading="lazy" src="${esc(i.gambar)}" alt="${esc(i.judul)}">` : ''}
       <div class="p-6">
         <p class="font-body-md text-body-md text-on-surface-variant mb-2">${esc(i.tanggal)}</p>
         <h3 class="font-headline-md text-headline-md text-on-surface mb-2">${esc(i.judul)}</h3>
         <p class="font-body-md text-body-md text-on-surface-variant">${esc(i.ringkasan)}</p>
       </div>
     </article>`).join('');
+  document.getElementById('berita').classList.remove('hidden');
   if (window.revealScan) window.revealScan(document.getElementById('berita-grid').parentNode);
 });
-// buka form login/undangan admin dari link email Netlify Identity
-if (window.netlifyIdentity) netlifyIdentity.on('init', u => { if (!u) netlifyIdentity.on('login', () => location.href = '/admin/'); });
 </script>
 </body></html>
