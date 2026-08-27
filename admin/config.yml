@@ -2,7 +2,9 @@ backend:
   name: github
   repo: jafarsmi012-ux/web-asbdjabar
   branch: main
-  base_url: https://GANTI.workers.dev    # Worker OAuth, lihat CATATAN-DEPLOY.md
+  # OAuth ditangani Pages Function di repo ini (functions/auth.js + callback.js).
+  # Isi dengan domain situs setelah deploy, mis. https://web-asbdjabar.pages.dev
+  base_url: https://GANTI.pages.dev
 media_folder: images/uploads
 public_folder: /images/uploads
 locale: id

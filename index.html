@@ -251,7 +251,7 @@
 </div>
 </div>
 </section>
-<!-- Gallery Section (Masonry) -->
+<!-- Gallery Section (auto-scroll carousel) -->
 <section class="py-16 md:py-section-gap-lg bg-surface-container-lowest" id="gallery">
 <div class="container max-w-container-max mx-auto px-margin-mobile md:px-gutter">
 <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12" data-reveal>
@@ -263,7 +263,7 @@
                         Lihat Semua <span class="material-symbols-outlined text-sm">arrow_forward</span>
 </a>
 </div>
-<div class="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4" data-reveal-group id="gallery-grid"></div>
+<div class="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4" data-reveal id="gallery-grid"></div>
 </div>
 </section>
 <!-- Sejarah -->
@@ -288,7 +288,7 @@
 <h2 class="font-headline-xl text-headline-xl-mobile md:text-headline-xl text-on-surface uppercase tracking-tight mb-2" data-reveal>Daftar <span class="text-secondary-fixed">Anggota Baru</span></h2>
 <p class="font-body-md text-body-md text-on-surface-variant mb-8" data-reveal>Isi formulir di bawah ini. Pengurus akan menghubungi nomor wali yang didaftarkan.</p>
 
-<!-- Netlify Forms: diproses oleh Netlify saat build, tanpa backend sendiri. -->
+<!-- Pendaftar disimpan ke Supabase via REST — lihat script di bawah + supabase/schema.sql -->
 <form class="space-y-5" data-reveal id="form-daftar" method="POST" name="pendaftaran">
 <!-- honeypot anti-spam: bot mengisi, manusia tidak melihatnya -->
 <input name="botcheck" type="checkbox" class="hidden" style="display:none" tabindex="-1" autocomplete="off"/>
@@ -835,15 +835,31 @@ fetch('data/hero.json').then(r => r.json()).then(({gambar}) => {
   if (gambar) document.getElementById('hero-parallax').style.backgroundImage = `url('${gambar}')`;
 });
 fetch('data/galeri.json').then(r => r.json()).then(({items}) => {
-  document.getElementById('gallery-grid').innerHTML = items.map(i => `
-    <div class="relative overflow-hidden rounded-lg group break-inside-avoid">
-      <img class="w-full h-auto object-cover transform group-hover:scale-110 transition-transform duration-700" loading="lazy" src="${esc(i.gambar)}" alt="${esc(i.judul)}">
+  const track = document.getElementById('gallery-grid');
+  track.innerHTML = items.map(i => `
+    <div class="relative overflow-hidden rounded-lg group snap-start shrink-0 w-[82%] sm:w-80 lg:w-96">
+      <img class="w-full h-64 lg:h-80 object-cover transform group-hover:scale-110 transition-transform duration-700" loading="lazy" src="${esc(i.gambar)}" alt="${esc(i.judul)}">
       <div class="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
         <h3 class="font-headline-md text-headline-md text-secondary-fixed">${esc(i.judul)}</h3>
         <p class="font-body-md text-body-md text-on-surface-variant">${esc(i.keterangan)}</p>
       </div>
     </div>`).join('');
-  if (window.revealScan) window.revealScan(document.getElementById('gallery-grid').parentNode);
+
+  // Auto-scroll tiap 4 dtk. Berhenti saat hover/sentuh, balik ke awal di ujung.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || items.length < 2) return;
+  let paused = false, resume;
+  const hold = () => { paused = true; clearTimeout(resume); };
+  const release = () => { resume = setTimeout(() => { paused = false; }, 4000); };
+  track.addEventListener('pointerenter', hold);
+  track.addEventListener('pointerleave', release);
+  track.addEventListener('pointerdown', hold);
+  track.addEventListener('pointerup', release);
+  setInterval(() => {
+    if (paused) return;
+    const step = track.firstElementChild.getBoundingClientRect().width + 16;
+    const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+    track.scrollTo({ left: atEnd ? 0 : track.scrollLeft + step, behavior: 'smooth' });
+  }, 4000);
 });
 fetch('data/sejarah.json').then(r => r.json()).then(({items}) => {
   if (!items || !items.length) return;   // kerangka kosong: section tetap tersembunyi
@@ -860,13 +876,20 @@ fetch('data/sejarah.json').then(r => r.json()).then(({items}) => {
   if (window.revealScan) window.revealScan(sec);
 });
 /* ------------------------- Pendaftaran anggota -------------------------
-   Host-agnostic: form dikirim ke endpoint pihak ketiga (Web3Forms), jadi
-   tetap jalan di Cloudflare Pages yang tidak punya form bawaan.
-   WhatsApp tersedia sebagai jalur cadangan bila pengiriman gagal.       */
+   Data pendaftar disimpan ke Supabase (lihat supabase/schema.sql). Situs
+   statis menulis langsung lewat REST API, tanpa backend sendiri.
+   Web3Forms opsional: ping email ke pengurus setelah insert berhasil.
+   WhatsApp jadi jalur cadangan bila pengiriman gagal.                    */
 // GANTI dengan nomor WhatsApp pengurus, format internasional tanpa tanda +.
 const WA_NOMOR = '6281234567890';
-// GANTI dengan access key dari https://web3forms.com (gratis, cukup daftar email).
-// Alternatif: ganti URL + payload ke Formspree atau Google Apps Script.
+
+// Supabase — penyimpanan pendaftar. Kedua nilai ini AMAN dipublikasikan:
+// RLS mengizinkan anon HANYA insert ke tabel pendaftar, tidak bisa baca/ubah.
+const SUPABASE_URL = 'https://GANTI.supabase.co';
+const SUPABASE_ANON_KEY = 'GANTI-DENGAN-ANON-KEY';
+
+// Opsional — notifikasi email via https://web3forms.com. Biarkan apa adanya
+// bila notifikasi diatur lewat Database Webhook Supabase.
 const FORM_ENDPOINT = 'https://api.web3forms.com/submit';
 const FORM_ACCESS_KEY = 'GANTI-DENGAN-ACCESS-KEY';
 
@@ -903,6 +926,8 @@ const FORM_ACCESS_KEY = 'GANTI-DENGAN-ACCESS-KEY';
   perbaruiWa();
   form.addEventListener('input', perbaruiWa);
 
+  const angka = function (v) { return v === '' || v == null ? null : Number(v); };
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!form.reportValidity()) return;
@@ -911,25 +936,61 @@ const FORM_ACCESS_KEY = 'GANTI-DENGAN-ACCESS-KEY';
     status.textContent = 'Mengirim…';
     status.className = 'font-body-md text-body-md text-on-surface-variant';
 
-    const data = Object.fromEntries(new FormData(form));
-    data.access_key = FORM_ACCESS_KEY;
-    data.subject = 'Pendaftaran Anggota Baru ASBD Jabar — ' + (data.nama_calon || '');
-
-    fetch(FORM_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(data),
-    }).then(function (r) {
-      if (!r.ok) throw new Error(r.status);
+    const f = new FormData(form);
+    const sukses = function () {
       form.reset();
       perbaruiWa();
       status.textContent = 'Terima kasih. Pendaftaran terkirim — pengurus akan menghubungi nomor wali yang didaftarkan.';
       status.className = 'font-body-md text-body-md text-secondary-fixed';
+      tombol.disabled = false;
+    };
+    // Honeypot: bot mengisi 'botcheck'. Tampilkan sukses palsu, jangan simpan.
+    if (f.get('botcheck')) { sukses(); return; }
+
+    const row = {
+      nama_calon: f.get('nama_calon'),
+      nik: f.get('nik'),
+      tempat_lahir: f.get('tempat_lahir') || null,
+      tanggal_lahir: f.get('tanggal_lahir') || null,
+      sekolah_kelas: f.get('sekolah_kelas') || null,
+      golongan_darah: f.get('golongan_darah') || null,
+      berat_badan: angka(f.get('berat_badan')),
+      tinggi_badan: angka(f.get('tinggi_badan')),
+      cabang_latihan: f.get('cabang_latihan') || null,
+      nama_wali: f.get('nama_wali'),
+      hp_wali: f.get('hp_wali'),
+      email_wali: f.get('email_wali') || null,
+      catatan: f.get('catatan') || null,
+      persetujuan_wali: f.get('persetujuan_wali') === 'ya',
+    };
+
+    fetch(SUPABASE_URL + '/rest/v1/pendaftar', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify(row),
+    }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      // Ping email opsional; gagalnya tidak membatalkan pendaftaran.
+      if (FORM_ACCESS_KEY.indexOf('GANTI') === -1) {
+        fetch(FORM_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(Object.assign({
+            access_key: FORM_ACCESS_KEY,
+            subject: 'Pendaftaran Anggota Baru ASBD Jabar — ' + (row.nama_calon || ''),
+          }, row)),
+        }).catch(function () {});
+      }
+      sukses();
     }).catch(function () {
       // Jangan biarkan calon anggota buntu: arahkan ke WhatsApp.
       status.innerHTML = 'Pengiriman gagal. Silakan coba lagi atau daftar lewat tombol WhatsApp di atas.';
       status.className = 'font-body-md text-body-md text-error';
-    }).finally(function () {
       tombol.disabled = false;
     });
   });

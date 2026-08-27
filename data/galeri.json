@@ -1,19 +1,29 @@
 {
   "items": [
     {
-      "judul": "Latihan Bersama",
-      "keterangan": "Padepokan Utama, 2023",
-      "gambar": "https://lh3.googleusercontent.com/aida-public/AB6AXuAz5m2rQKOtU5ilfGFmL8c6pmMSepnOz69IOVzAS-6Ttdoi6QmxKHIagb0zuGKqw0g8D3aLjEHKbGwyOrnuWDikY3WDLGlhi_XLrK8mKA5eQbciQXI5T1WM3qTU2INPJmrS5dWHi0RZTactGZKc_-jQ7YvnhQop-I5qMb6J7Pmu0CRdQrcd-GCHGW1n-Qsdfp6oGJSxqKOzk86tYwR01IS4_Mrta3BUXCBaave4oZHq5fbvhFG959gmNg"
+      "judul": "Juara Piala YK Championship 2023",
+      "keterangan": "Kejuaraan Pencak Silat Tingkat Nasional",
+      "gambar": "/images/uploads/galeri-yk-championship-2023.jpg"
     },
     {
-      "judul": "Seni Senjata",
-      "keterangan": "Kejuaraan Nasional",
-      "gambar": "https://lh3.googleusercontent.com/aida-public/AB6AXuDqzd07-LARvYMQ03QThKTiFFN4SVmqpKRrF_G8lpDU6ORBf9IpmjbLPTx5tEJM4kuD76V79-ZkFLnwlExZ11yGtnI1wbXCCm952CuSERsiXcXZI4Sah-J-A0HOp86GVZnKhdZBYPonsy_8O72gbCqSQAdZmW-W7ODVDqlCY4ygIPFUiyiJ7TUoNW3RILk3BtzV1mKXTt3zeiUdmlh10aMDTqiw08vinKuG5VPrseGDUCESjh0TI5hJ_A"
+      "judul": "UKT ASBD Daarut Tauhiid",
+      "keterangan": "PDFW Daarut Tauhiid Bandung",
+      "gambar": "/images/uploads/galeri-ukt-asbd-daarut-tauhiid.jpg"
     },
     {
-      "judul": "Final Tanding",
-      "keterangan": "O2SN Jawa Barat",
-      "gambar": "https://lh3.googleusercontent.com/aida-public/AB6AXuBNpu1X-FkSO8wftkiQ7ebpBcxMmEtQ6zl4w867oC3QdRnZV3_s5DM8s2wiYGzkoHlD7wytttCvqo9oLDHt8h8hfpzGKq0RCs7Xngg27rdWazcB3F2RpOiZRBFm8KWAJR9v3tskUFdp9udYkRl3lIp0wh9-n25ld16s2D4DqswXSwwTpl7vaiXX8N_Fvamh4EGM4YWiOH6lhmGBp28DFFRT4WUh4xaeVxD_3Fj-MLUfKwJaFXGlZpa-Rw"
+      "judul": "Pelatih ASBD",
+      "keterangan": "Al-Azhar Moslem Pencak Arts",
+      "gambar": "/images/uploads/galeri-pelatih-alazhar.jpg"
+    },
+    {
+      "judul": "Pengukuhan Pelatih",
+      "keterangan": "Al-Azhar Seni Bela Diri",
+      "gambar": "/images/uploads/galeri-pengukuhan-pelatih.jpg"
+    },
+    {
+      "judul": "Juara Umum Al-Ma'soem Islamic Fair 2018",
+      "keterangan": "Penyerahan piala bergilir",
+      "gambar": "/images/uploads/galeri-almasoem-islamic-fair-2018.jpg"
     }
   ]
 }
