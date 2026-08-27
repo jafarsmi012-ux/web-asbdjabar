@@ -50,8 +50,8 @@ collections:
             widget: list
             summary: '{{fields.judul}}'
             fields:
-              - {name: judul, label: Judul, widget: string}
-              - {name: keterangan, label: Keterangan, widget: string}
+              - {name: judul, label: Judul (opsional), widget: string, required: false}
+              - {name: keterangan, label: Keterangan (opsional), widget: string, required: false}
               - {name: gambar, label: Gambar, widget: image}
 
   - name: sejarah

@@ -836,14 +836,20 @@ fetch('data/hero.json').then(r => r.json()).then(({gambar}) => {
 });
 fetch('data/galeri.json').then(r => r.json()).then(({items}) => {
   const track = document.getElementById('gallery-grid');
-  track.innerHTML = items.map(i => `
-    <div class="relative overflow-hidden rounded-lg group snap-start shrink-0 w-[82%] sm:w-80 lg:w-96">
-      <img class="w-full h-64 lg:h-80 object-cover transform group-hover:scale-110 transition-transform duration-700" loading="lazy" src="${esc(i.gambar)}" alt="${esc(i.judul)}">
+  track.innerHTML = items.map(i => {
+    const judul = esc(i.judul || ''), ket = esc(i.keterangan || '');
+    // Overlay judul/keterangan hanya muncul kalau salah satunya diisi.
+    const overlay = (judul || ket) ? `
       <div class="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-        <h3 class="font-headline-md text-headline-md text-secondary-fixed">${esc(i.judul)}</h3>
-        <p class="font-body-md text-body-md text-on-surface-variant">${esc(i.keterangan)}</p>
-      </div>
-    </div>`).join('');
+        ${judul ? `<h3 class="font-headline-md text-headline-md text-secondary-fixed">${judul}</h3>` : ''}
+        ${ket ? `<p class="font-body-md text-body-md text-on-surface-variant">${ket}</p>` : ''}
+      </div>` : '';
+    return `
+    <div class="relative overflow-hidden rounded-lg group snap-start shrink-0 w-[82%] sm:w-80 lg:w-96">
+      <img class="w-full h-64 lg:h-80 object-cover transform group-hover:scale-110 transition-transform duration-700" loading="lazy" src="${esc(i.gambar)}" alt="${judul || 'Foto kegiatan ASBD Jawa Barat'}">
+      ${overlay}
+    </div>`;
+  }).join('');
 
   // Auto-scroll tiap 4 dtk. Berhenti saat hover/sentuh, balik ke awal di ujung.
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || items.length < 2) return;
