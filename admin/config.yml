@@ -9,6 +9,22 @@ public_folder: /images/uploads
 locale: id
 
 collections:
+  - name: pengumuman
+    label: Pengumuman (Banner)
+    files:
+      - name: pengumuman
+        label: Banner Pengumuman
+        file: data/pengumuman.json
+        format: json
+        fields:
+          - {name: aktif, label: 'Tampilkan banner di situs?', widget: boolean, default: false}
+          - {name: judul, label: Judul, widget: string, required: false, hint: 'mis. Pendaftaran UKT Semester Ganjil'}
+          - {name: teks, label: Keterangan, widget: text, required: false}
+          - {name: gambar, label: Poster (opsional), widget: image, required: false, hint: 'Kompres < 300 KB'}
+          - {name: tautan_label, label: Teks tombol (opsional), widget: string, required: false, hint: 'mis. Daftar Sekarang'}
+          - {name: tautan_url, label: Link tombol (opsional), widget: string, required: false, hint: 'mis. #daftar'}
+          - {name: berlaku_sampai, label: Tampil sampai tanggal (opsional), widget: date, format: YYYY-MM-DD, required: false, hint: 'Banner otomatis hilang setelah tanggal ini'}
+
   - name: hero
     label: Hero (Gambar Utama)
     files:
