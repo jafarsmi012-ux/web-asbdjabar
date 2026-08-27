@@ -1,8 +1,8 @@
 {
-  "aktif": false,
-  "judul": "",
+  "aktif": true,
+  "judul": "UKT 2026",
   "teks": "",
-  "gambar": "",
+  "gambar": "/images/uploads/chatgpt-image-aug-26-2026-02_02_57-pm.webp",
   "tautan_label": "",
   "tautan_url": "",
   "berlaku_sampai": ""
