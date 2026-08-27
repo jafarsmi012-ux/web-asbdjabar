@@ -7,6 +7,9 @@ backend:
 media_folder: images/uploads
 public_folder: /images/uploads
 locale: id
+site_url: https://asbdjabar.com
+display_url: https://asbdjabar.com
+logo_url: /admin/logo.svg
 
 collections:
   - name: pengumuman

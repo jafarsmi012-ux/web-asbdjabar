@@ -1,8 +1,61 @@
 <!doctype html>
 <html lang="id">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
-<title>Admin ASBD Jabar</title></head>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/admin/logo.svg">
+<title>Panel Pengelola — ASBD Jabar</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; }
+  #splash {
+    position: fixed; inset: 0; z-index: 9999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1.25rem; padding: 2rem; text-align: center;
+    background: #0b0908; color: #e7e3df;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  }
+  #splash img { width: 76px; height: 76px; }
+  #splash h1 {
+    margin: 0; font-size: 1rem; font-weight: 800;
+    letter-spacing: .14em; text-transform: uppercase; color: #F5C518;
+  }
+  #splash p { margin: 0; max-width: 22rem; font-size: .875rem; line-height: 1.55; color: #a8a29b; }
+  #splash strong { color: #e7e3df; }
+  #splash .spin {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid rgba(245,197,24,.25); border-top-color: #F5C518;
+    animation: sp .8s linear infinite;
+  }
+  @keyframes sp { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { #splash .spin { animation: none; } }
+</style>
+</head>
 <body>
+<div id="splash">
+  <img src="/admin/logo.svg" alt="ASBD Jabar" width="76" height="76">
+  <h1>Panel Pengelola Konten</h1>
+  <div class="spin" role="status" aria-label="Memuat"></div>
+  <p>Memuat panel… Masuk dengan akun <strong>GitHub</strong> yang sudah diberi akses ke situs ASBD Jabar.</p>
+  <noscript><p>Panel ini membutuhkan JavaScript aktif di peramban.</p></noscript>
+</div>
+<script>
+  // Hapus splash begitu Decap menaruh elemennya di halaman.
+  new MutationObserver(function (muts, obs) {
+    for (var i = 0; i < muts.length; i++) {
+      for (var j = 0; j < muts[i].addedNodes.length; j++) {
+        var n = muts[i].addedNodes[j];
+        if (n.nodeType === 1 && n.id !== 'splash' && n.tagName !== 'SCRIPT') {
+          var s = document.getElementById('splash');
+          if (s) s.remove();
+          obs.disconnect();
+          return;
+        }
+      }
+    }
+  }).observe(document.body, { childList: true });
+</script>
 <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </body>
 </html>
