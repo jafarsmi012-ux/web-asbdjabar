@@ -263,7 +263,7 @@
                         Lihat Semua <span class="material-symbols-outlined text-sm">arrow_forward</span>
 </a>
 </div>
-<div class="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4" id="gallery-grid"></div>
+<div class="relative flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4" id="gallery-grid"></div>
 </div>
 </section>
 <!-- Sejarah -->
@@ -844,27 +844,27 @@ fetch('data/galeri.json').then(r => r.json()).then(({items}) => {
         ${judul ? `<h3 class="font-headline-md text-headline-md text-secondary-fixed">${judul}</h3>` : ''}
         ${ket ? `<p class="font-body-md text-body-md text-on-surface-variant">${ket}</p>` : ''}
       </div>` : '';
+    // Tinggi seragam, lebar ikut rasio asli — foto potret & lanskap tak terpotong.
     return `
-    <div class="relative overflow-hidden rounded-lg group snap-start shrink-0 w-[82%] sm:w-80 lg:w-96">
-      <img class="w-full h-64 lg:h-80 object-cover transform group-hover:scale-110 transition-transform duration-700" loading="lazy" src="${esc(i.gambar)}" alt="${judul || 'Foto kegiatan ASBD Jawa Barat'}">
+    <div class="relative overflow-hidden rounded-lg group snap-start shrink-0 h-64 sm:h-80 lg:h-96">
+      <img class="h-full w-auto max-w-none transition-transform duration-700 group-hover:scale-105" loading="lazy" src="${esc(i.gambar)}" alt="${judul || 'Foto kegiatan ASBD Jawa Barat'}">
       ${overlay}
     </div>`;
   }).join('');
 
-  // Auto-scroll tiap 4 dtk. Berhenti saat hover/sentuh, balik ke awal di ujung.
+  // Auto-scroll tiap 4 dtk. Slide lebar-variabel: pindah ke foto berikutnya.
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || items.length < 2) return;
   let paused = false, resume;
   const hold = () => { paused = true; clearTimeout(resume); };
   const release = () => { resume = setTimeout(() => { paused = false; }, 4000); };
-  track.addEventListener('pointerenter', hold);
-  track.addEventListener('pointerleave', release);
-  track.addEventListener('pointerdown', hold);
-  track.addEventListener('pointerup', release);
+  ['pointerenter', 'pointerdown'].forEach(e => track.addEventListener(e, hold));
+  ['pointerleave', 'pointerup'].forEach(e => track.addEventListener(e, release));
   setInterval(() => {
     if (paused) return;
-    const step = track.firstElementChild.getBoundingClientRect().width + 16;
-    const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
-    track.scrollTo({ left: atEnd ? 0 : track.scrollLeft + step, behavior: 'smooth' });
+    const kids = [...track.children];
+    const cur = kids.findIndex(k => k.offsetLeft >= track.scrollLeft - 8);
+    const next = kids[((cur < 0 ? kids.length - 1 : cur) + 1) % kids.length];
+    track.scrollTo({ left: next.offsetLeft, behavior: 'smooth' });
   }, 4000);
 });
 fetch('data/sejarah.json').then(r => r.json()).then(({items}) => {
