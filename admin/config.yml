@@ -52,7 +52,7 @@ collections:
             fields:
               - {name: judul, label: Judul (opsional), widget: string, required: false}
               - {name: keterangan, label: Keterangan (opsional), widget: string, required: false}
-              - {name: gambar, label: Gambar, widget: image}
+              - {name: gambar, label: Gambar, widget: image, hint: 'Kompres dulu ke JPG/WebP < 300 KB, lebar ~1000px'}
 
   - name: sejarah
     label: Sejarah
