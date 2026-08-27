@@ -18,10 +18,11 @@ collections:
         format: json
         fields:
           - {name: aktif, label: 'Tampilkan bar di situs?', widget: boolean, default: false}
-          - {name: judul, label: Judul, widget: string, required: false, hint: 'singkat, mis. Pendaftaran UKT 2026 dibuka'}
-          - {name: teks, label: Keterangan singkat (opsional), widget: string, required: false, hint: '1 kalimat, mis. tanggal & lokasi'}
-          - {name: tautan_label, label: Teks link (opsional), widget: string, required: false, hint: 'mis. Daftar'}
-          - {name: tautan_url, label: Tujuan link (opsional), widget: string, required: false, hint: 'mis. #daftar atau #berita'}
+          - {name: judul, label: Judul (tampil di bar), widget: string, required: false, hint: 'singkat, mis. Pendaftaran UKT 2026 dibuka'}
+          - {name: teks, label: Isi lengkap (opsional), widget: text, required: false, hint: 'Tampil di pop-up saat "Selengkapnya" diklik'}
+          - {name: gambar, label: Poster (opsional), widget: image, required: false, hint: 'Tampil di pop-up. Kompres < 300 KB'}
+          - {name: tautan_label, label: Teks tombol (opsional), widget: string, required: false, hint: 'mis. Daftar Sekarang'}
+          - {name: tautan_url, label: Tujuan tombol (opsional), widget: string, required: false, hint: 'mis. #daftar'}
           - {name: berlaku_sampai, label: Tampil sampai tanggal (opsional), widget: date, format: YYYY-MM-DD, required: false, hint: 'Bar otomatis hilang setelah tanggal ini'}
 
   - name: hero
