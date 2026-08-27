@@ -3,7 +3,7 @@ backend:
   repo: jafarsmi012-ux/web-asbdjabar
   branch: main
   # OAuth ditangani Pages Function di repo ini (functions/auth.js + callback.js).
-  base_url: https://asbdjabar.pages.dev
+  base_url: https://asbdjabar.com
 media_folder: images/uploads
 public_folder: /images/uploads
 locale: id
