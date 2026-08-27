@@ -1,6 +1,9 @@
 # Backup lokal sebelum implementasi scroll sequence — digantikan oleh riwayat git
 index.html.backup-before-scroll-sequence
 
+# wrangler (cache lokal CLI Cloudflare)
+.wrangler/
+
 # OS / editor
 .DS_Store
 Thumbs.db
