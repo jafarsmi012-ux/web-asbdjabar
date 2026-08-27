@@ -5,8 +5,9 @@
 /images/uploads/*
   Cache-Control: public, max-age=600, must-revalidate
 
+# Konten CMS: selalu revalidasi supaya edit cepat terlihat setelah deploy.
 /data/*
-  Cache-Control: public, max-age=60, must-revalidate
+  Cache-Control: no-cache
 
 /*
   X-Content-Type-Options: nosniff
