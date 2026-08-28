@@ -9,7 +9,7 @@ public_folder: /images/uploads
 locale: id
 site_url: https://asbdjabar.com
 display_url: https://asbdjabar.com
-logo_url: /admin/logo.svg
+logo_url: /admin/logo-asbd.webp
 
 collections:
   - name: pengumuman

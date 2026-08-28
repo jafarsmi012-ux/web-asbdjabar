@@ -4,28 +4,53 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
-<link rel="icon" href="/admin/logo.svg">
+<link rel="icon" href="/admin/logo-asbd.webp">
 <title>Panel Pengelola — ASBD Jabar</title>
 <style>
   :root { color-scheme: dark; }
-  body { margin: 0; }
-  #splash {
-    position: fixed; inset: 0; z-index: 9999;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 1.25rem; padding: 2rem; text-align: center;
-    background: #0b0908; color: #e7e3df;
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  body { margin: 0; background: #0b0908; }
+
+  /* Latar untuk layar login Decap (di belakang kartu login-nya). */
+  #nc-root {
+    min-height: 100vh;
+    background:
+      linear-gradient(rgba(11, 9, 8, 0.90), rgba(11, 9, 8, 0.96)),
+      url(/admin/bg-silat.webp) center / cover no-repeat fixed,
+      #0b0908;
   }
-  #splash img { width: 76px; height: 76px; }
+
+  /* Splash sementara selagi decap-cms.js (~1 MB) diunduh. */
+  #splash {
+    position: fixed; inset: 0; z-index: 9999; overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1.15rem; padding: 2rem; text-align: center;
+    background: #0b0908;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    color: #e7e3df;
+  }
+  #splash::before {
+    content: ""; position: absolute; inset: 0;
+    background: url(/admin/bg-silat.webp) center / cover no-repeat;
+    opacity: 0.30; filter: blur(1px) grayscale(0.2);
+  }
+  #splash > * { position: relative; z-index: 1; }
+
+  #splash .logo {
+    width: 90px; height: 90px; border-radius: 50%; overflow: hidden;
+    border: 2px solid rgba(245, 197, 24, 0.45);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.55);
+  }
+  #splash .logo img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); display: block; }
+
   #splash h1 {
     margin: 0; font-size: 1rem; font-weight: 800;
     letter-spacing: .14em; text-transform: uppercase; color: #F5C518;
   }
-  #splash p { margin: 0; max-width: 22rem; font-size: .875rem; line-height: 1.55; color: #a8a29b; }
-  #splash strong { color: #e7e3df; }
+  #splash p { margin: 0; max-width: 22rem; font-size: .875rem; line-height: 1.55; color: #c9c4bd; }
+  #splash strong { color: #f0ece6; }
   #splash .spin {
     width: 22px; height: 22px; border-radius: 50%;
-    border: 2px solid rgba(245,197,24,.25); border-top-color: #F5C518;
+    border: 2px solid rgba(245, 197, 24, .25); border-top-color: #F5C518;
     animation: sp .8s linear infinite;
   }
   @keyframes sp { to { transform: rotate(360deg); } }
@@ -33,28 +58,28 @@
 </style>
 </head>
 <body>
+<div id="nc-root"></div>
 <div id="splash">
-  <img src="/admin/logo.svg" alt="ASBD Jabar" width="76" height="76">
+  <div class="logo"><img src="/admin/logo-asbd.webp" alt="ASBD Jabar" width="90" height="90"></div>
   <h1>Panel Pengelola Konten</h1>
   <div class="spin" role="status" aria-label="Memuat"></div>
   <p>Memuat panel… Masuk dengan akun <strong>GitHub</strong> yang sudah diberi akses ke situs ASBD Jabar.</p>
   <noscript><p>Panel ini membutuhkan JavaScript aktif di peramban.</p></noscript>
 </div>
 <script>
-  // Hapus splash begitu Decap menaruh elemennya di halaman.
+  // Hapus splash begitu Decap merender (isi #nc-root, atau elemennya sendiri di body).
   new MutationObserver(function (muts, obs) {
-    for (var i = 0; i < muts.length; i++) {
-      for (var j = 0; j < muts[i].addedNodes.length; j++) {
-        var n = muts[i].addedNodes[j];
-        if (n.nodeType === 1 && n.id !== 'splash' && n.tagName !== 'SCRIPT') {
-          var s = document.getElementById('splash');
-          if (s) s.remove();
-          obs.disconnect();
-          return;
-        }
-      }
+    var root = document.getElementById('nc-root');
+    var adaUI = (root && root.children.length) ||
+      [].some.call(document.body.children, function (el) {
+        return el.id !== 'splash' && el.id !== 'nc-root' && el.tagName !== 'SCRIPT';
+      });
+    if (adaUI) {
+      var s = document.getElementById('splash');
+      if (s) s.remove();
+      obs.disconnect();
     }
-  }).observe(document.body, { childList: true });
+  }).observe(document.body, { childList: true, subtree: true });
 </script>
 <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </body>
