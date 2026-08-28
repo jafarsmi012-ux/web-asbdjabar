@@ -482,7 +482,7 @@ const HERO_SEQUENCE_CONFIG = {
   desktopPath: 'asbd/hero/desktop/',
   mobilePath: 'asbd/hero/mobile/',
   desktopFrameCount: 159,
-  mobileFrameCount: 80,
+  mobileFrameCount: 1,
   desktopWidth: 1280,
   desktopHeight: 720,
   mobileWidth: 720,
@@ -513,20 +513,22 @@ const HERO_SEQUENCE_CONFIG = {
   const isMobile = window.innerWidth < C.mobileBreakpoint;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const saveData = !!(navigator.connection && navigator.connection.saveData);
-  // Mode statis: satu frame saja, tanpa scroll animation.
-  const staticMode = reduceMotion || saveData;
+  // Mode statis: satu frame, tinggi 1 layar, tanpa scroll-scrub.
+  // HP ikut statis — scrub 400vh terasa panjang & tidak jelas di layar kecil;
+  // sinematik scroll-driven hanya di desktop.
+  const staticMode = reduceMotion || saveData || isMobile;
 
   const path = isMobile ? C.mobilePath : C.desktopPath;
   const frameCount = isMobile ? C.mobileFrameCount : C.desktopFrameCount;
   const lastFrame = frameCount - 1;
 
-  // Mobile hanya punya frame ganjil (00001, 00003, ... 00191).
+  // Mobile: hanya 1 frame statis (mobile/00001.webp). Desktop: 00001..00159.
   function frameSrc(i) {
     const n = isMobile ? i * 2 + 1 : i + 1;
     return path + String(n).padStart(5, '0') + '.webp';
   }
 
-  // Track scroll hero: 250vh normal, 100vh saat mode statis (tanpa scroll mati).
+  // Track scroll hero: 400vh untuk scrub (desktop), 100vh saat statis (HP / reduced-motion).
   section.style.height = staticMode ? '100vh' : C.heroScrollHeight;
 
   /* ---------------------------------------------------------------- canvas */
