@@ -10,6 +10,13 @@
 /data/*
   Cache-Control: no-cache
 
+# HTML: cache di edge sebentar + sajikan basi sambil refresh (TTFB kecil).
+# Deploy baru otomatis purge cache Pages.
+/
+  Cache-Control: public, max-age=0, s-maxage=60, stale-while-revalidate=600
+/*.html
+  Cache-Control: public, max-age=0, s-maxage=60, stale-while-revalidate=600
+
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
