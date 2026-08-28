@@ -162,7 +162,7 @@
 </div>
 </div>
 <!-- Babak 2 -->
-<div aria-hidden="true" class="absolute inset-0 z-30 flex items-center pt-20 pointer-events-none" data-hero-act="1">
+<div aria-hidden="true" style="visibility:hidden;opacity:0" class="absolute inset-0 z-30 flex items-center pt-20 pointer-events-none" data-hero-act="1">
 <div class="container max-w-container-max mx-auto px-margin-mobile md:px-gutter">
 <div class="max-w-3xl">
 <span class="font-mono-technical text-mono-technical text-secondary-fixed block mb-4">01 — DISIPLIN</span>
@@ -174,7 +174,7 @@
 </div>
 </div>
 <!-- Babak 3 -->
-<div aria-hidden="true" class="absolute inset-0 z-30 flex items-center pt-20 pointer-events-none" data-hero-act="2">
+<div aria-hidden="true" style="visibility:hidden;opacity:0" class="absolute inset-0 z-30 flex items-center pt-20 pointer-events-none" data-hero-act="2">
 <div class="container max-w-container-max mx-auto px-margin-mobile md:px-gutter">
 <div class="max-w-3xl md:ml-auto md:text-right">
 <span class="font-mono-technical text-mono-technical text-primary block mb-4">02 — WARISAN</span>
@@ -510,12 +510,15 @@ const HERO_SEQUENCE_CONFIG = {
   const indicator = document.getElementById('hero-scroll-indicator');
   const nav = document.querySelector('nav');
 
-  const isMobile = window.innerWidth < C.mobileBreakpoint;
+  // "Desktop sungguhan" = layar lebar + mouse/trackpad. Cek pointer/hover tidak
+  // bisa dipalsukan oleh mode "Situs desktop" di browser HP (innerWidth bisa).
+  const isDesktop = window.matchMedia('(min-width: ' + C.mobileBreakpoint + 'px)').matches
+    && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const isMobile = !isDesktop;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const saveData = !!(navigator.connection && navigator.connection.saveData);
-  // Mode statis: satu frame, tinggi 1 layar, tanpa scroll-scrub.
-  // HP ikut statis — scrub 400vh terasa panjang & tidak jelas di layar kecil;
-  // sinematik scroll-driven hanya di desktop.
+  // Mode statis: 1 frame, tinggi 1 layar, tanpa scroll-scrub. Semua non-desktop
+  // ikut statis — scrub 400vh terasa panjang & tidak jelas di layar kecil.
   const staticMode = reduceMotion || saveData || isMobile;
 
   const path = isMobile ? C.mobilePath : C.desktopPath;
@@ -712,6 +715,7 @@ const HERO_SEQUENCE_CONFIG = {
   function fallbackToStaticImage() {
     canvas.style.display = 'none';   // biarkan #hero-parallax (data/hero.json) yang tampil
     if (loading) loading.remove();
+    updateActs(0);                   // pastikan babak 2 & 3 tidak menumpuk babak 1
     console.warn('[hero] sequence tidak tersedia, memakai gambar hero statis.');
   }
 
