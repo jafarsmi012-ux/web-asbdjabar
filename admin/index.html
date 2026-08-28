@@ -18,6 +18,19 @@
       url(/admin/bg-silat.webp) center / cover no-repeat fixed,
       #0b0908;
   }
+  /* Decap merender logo_url besar secara default — perkecil. */
+  #nc-root img[src*="logo-asbd"],
+  #nc-root [style*="logo-asbd"] {
+    width: 72px !important;
+    height: 72px !important;
+    max-width: 72px !important;
+    max-height: 72px !important;
+    min-height: 0 !important;
+    margin-bottom: 1.25rem !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+  }
 
   /* Splash sementara selagi decap-cms.js (~1 MB) diunduh. */
   #splash {
