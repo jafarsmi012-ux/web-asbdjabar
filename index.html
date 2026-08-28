@@ -121,7 +121,27 @@
 <main>
 <!-- Hero Section -->
 <section class="relative bg-surface-dim" id="home">
-<div class="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center pt-20" id="hero-sticky">
+<!-- Hero MOBILE: banner ringkas + teks di bawah (canvas scrub hanya untuk desktop) -->
+<div class="md:hidden">
+<div class="relative h-72">
+<img class="w-full h-full object-cover" src="/asbd/hero/mobile/00001.webp" alt="Pesilat Al-Azhar Seni Bela Diri berlatih">
+<div class="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background"></div>
+</div>
+<div class="relative z-10 -mt-8 px-margin-mobile pb-10 text-center space-y-4">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-primary-container/80 border border-primary/30 rounded-full backdrop-blur-sm">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-mono-technical text-mono-technical text-primary">AL-AZHAR SENI BELA DIRI</span>
+</div>
+<h1 class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface uppercase tracking-tighter leading-tight drop-shadow-2xl">
+ASBD Jabar:<br><span class="text-secondary-fixed">Warisan Luhur,</span><br>Disiplin Modern
+</h1>
+<div class="flex flex-col gap-3 pt-1">
+<a class="bg-secondary-fixed text-on-secondary-fixed px-8 py-3 rounded font-label-bold text-label-bold text-center glow-active" href="#programs">Mulai Berlatih</a>
+<a class="border border-secondary-fixed text-secondary-fixed px-8 py-3 rounded font-label-bold text-label-bold text-center" href="#sejarah">Pelajari Lebih Lanjut</a>
+</div>
+</div>
+</div>
+<div class="hidden md:flex sticky top-0 h-screen w-full overflow-hidden items-center justify-center pt-20" id="hero-sticky">
 <!-- Fallback hero image (dikelola CMS via data/hero.json). Terlihat hanya bila sequence gagal total. -->
 <div class="absolute inset-0 z-0 overflow-hidden">
 <div class="absolute inset-0 bg-cover bg-center" id="hero-parallax" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDUzhocpisSz5P_b7McIoNxjpSzBNe7DFvwn6fuqRPn7EVbU29ri5WLdWdPa1AxlRZ2esBrqSFi2pNrtteaDZ8solzOjUy3l0D8-tumxZ2dzynayTtMqJqphfFPEb6NNGihEh4sreSIVwMFkeqrqtt3jvwNhQtKm7BHmlVCY4vq9b4k6716hi6ZuFXSGaeR2eIMUJN3Rmk45Y67CCR-DlPrcIUGj82Tk7L8KaH39GBM9zN-j-51mAoaRg');"></div>
@@ -510,35 +530,28 @@ const HERO_SEQUENCE_CONFIG = {
   const indicator = document.getElementById('hero-scroll-indicator');
   const nav = document.querySelector('nav');
 
-  // Deteksi HP yang tahan mode "Situs desktop": layar fisik & sentuh tidak
-  // ikut dipalsukan seperti innerWidth.
+  // HP: hero-nya blok statis .md:hidden (HTML/CSS murni). Canvas scroll-scrub
+  // hanya untuk desktop. Deteksi pakai layar fisik + sentuh (tahan mode
+  // "Situs desktop" yang memalsukan innerWidth), sinkron dengan breakpoint md.
   const touch = (navigator.maxTouchPoints || 0) > 0 || 'ontouchstart' in window;
   const physShort = Math.min(screen.width || 9999, screen.height || 9999);
   const isMobile = window.innerWidth < C.mobileBreakpoint || (touch && physShort < 600);
+  if (isMobile) return;
+
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const saveData = !!(navigator.connection && navigator.connection.saveData);
-  // Mode statis: 1 frame, tanpa scroll-scrub. Semua HP ikut statis —
-  // scrub 400vh terasa panjang & tidak jelas di layar kecil.
-  const staticMode = reduceMotion || saveData || isMobile;
+  const staticMode = reduceMotion || saveData;   // desktop: 1 frame bila reduced-motion
 
-  const path = isMobile ? C.mobilePath : C.desktopPath;
-  const frameCount = isMobile ? C.mobileFrameCount : C.desktopFrameCount;
+  const path = C.desktopPath;
+  const frameCount = C.desktopFrameCount;
   const lastFrame = frameCount - 1;
 
-  // Mobile: hanya 1 frame statis (mobile/00001.webp). Desktop: 00001..00159.
   function frameSrc(i) {
-    const n = isMobile ? i * 2 + 1 : i + 1;
-    return path + String(n).padStart(5, '0') + '.webp';
+    return path + String(i + 1).padStart(5, '0') + '.webp';
   }
 
-  // Track scroll hero: 400vh scrub (desktop) / 100vh statis (reduced-motion) /
-  // pita ringkas ~56vh di HP (bukan 1 layar penuh — terasa terlalu besar).
-  const heroMobileH = 'min(56vh, 30rem)';
-  section.style.height = staticMode ? (isMobile ? heroMobileH : '100vh') : C.heroScrollHeight;
-  if (staticMode && isMobile) {
-    const sticky = document.getElementById('hero-sticky');
-    if (sticky) sticky.style.height = heroMobileH;
-  }
+  // Track scroll hero: 400vh untuk scrub, 100vh saat statis (reduced-motion).
+  section.style.height = staticMode ? '100vh' : C.heroScrollHeight;
 
   /* ---------------------------------------------------------------- canvas */
   const ctx = canvas.getContext('2d', { alpha: false });
