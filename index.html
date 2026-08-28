@@ -481,8 +481,8 @@
 const HERO_SEQUENCE_CONFIG = {
   desktopPath: 'asbd/hero/desktop/',
   mobilePath: 'asbd/hero/mobile/',
-  desktopFrameCount: 192,
-  mobileFrameCount: 96,
+  desktopFrameCount: 159,
+  mobileFrameCount: 80,
   desktopWidth: 1280,
   desktopHeight: 720,
   mobileWidth: 640,
@@ -558,12 +558,15 @@ const HERO_SEQUENCE_CONFIG = {
     requestLoop();
   }
 
-  // cover-fit manual: isi viewport tanpa distorsi aspect ratio 16:9.
+  // Desktop: cover-fit (isi viewport). Mobile portrait: contain/letterbox
+  // supaya seluruh scene 16:9 tetap terlihat (pesilat di kiri-kanan tidak terpotong).
   function paint(img) {
     if (!img || !cssW || !cssH) return;
-    const scale = Math.max(cssW / img.naturalWidth, cssH / img.naturalHeight);
+    const fit = isMobile ? Math.min : Math.max;
+    const scale = fit(cssW / img.naturalWidth, cssH / img.naturalHeight);
     const dw = img.naturalWidth * scale;
     const dh = img.naturalHeight * scale;
+    if (isMobile) { ctx.fillStyle = '#0b0908'; ctx.fillRect(0, 0, cssW, cssH); }
     ctx.drawImage(img, (cssW - dw) / 2, (cssH - dh) / 2, dw, dh);
   }
 
