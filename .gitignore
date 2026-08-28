@@ -13,3 +13,6 @@ Thumbs.db
 
 # Video sumber hero (besar; sequence-nya yang di-commit)
 asbd/hero/source/
+
+# Node (build Tailwind CSS)
+node_modules/

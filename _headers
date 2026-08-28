@@ -10,6 +10,9 @@
 /data/*
   Cache-Control: no-cache
 
+/assets/*
+  Cache-Control: public, max-age=86400, must-revalidate
+
 # HTML: cache di edge sebentar + sajikan basi sambil refresh (TTFB kecil).
 # Deploy baru otomatis purge cache Pages.
 /

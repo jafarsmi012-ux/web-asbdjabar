@@ -81,8 +81,20 @@ Sebaiknya kedua halaman ditinjau pengurus, dan bila memungkinkan seseorang
 yang paham UU PDP No. 27/2022, karena situs ini mengumpulkan data pribadi
 anak di bawah umur.
 
-Tema Tailwind dipakai bersama lewat `assets/theme.js` — ubah warna atau
-tipografi di satu berkas itu, berlaku ke semua halaman.
+## 4b. CSS Tailwind (di-build, bukan CDN)
+
+Dulu pakai Tailwind Play CDN (~130 KB JS, generate CSS di browser). Sekarang
+di-build jadi `assets/tailwind.css` (~33 KB, ~6 KB terkompresi).
+
+- Warna & tipografi ada di `tailwind.config.js` (dulu `assets/theme.js`).
+- **Kalau mengubah kelas Tailwind di `*.html` atau mengubah `tailwind.config.js`:**
+
+      npm install    # sekali
+      npm run build  # -> assets/tailwind.css
+
+  lalu commit `assets/tailwind.css`. Edit konten lewat `/admin` TIDAK
+  mengubah kelas, jadi tidak perlu build ulang.
+- Deploy Cloudflare Pages tetap tanpa build step (CSS-nya sudah di-commit).
 
 ## 5. CMS (`/admin`)
 
