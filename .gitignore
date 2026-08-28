@@ -10,3 +10,6 @@ Thumbs.db
 *.swp
 .vscode/
 .idea/
+
+# Video sumber hero (besar; sequence-nya yang di-commit)
+asbd/hero/source/
