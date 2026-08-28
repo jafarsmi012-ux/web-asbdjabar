@@ -1,5 +1,6 @@
+# 1 hari (bukan immutable): ganti footage hero cukup tunggu 1x TTL, tanpa purge manual.
 /asbd/hero/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=86400, must-revalidate
 
 # Bukan immutable: gambar CMS bisa diganti dengan nama file sama.
 /images/uploads/*
