@@ -145,7 +145,7 @@
 <span class="text-secondary-fixed drop-shadow-[0_0_25px_rgba(245,197,24,0.5)]">Warisan Luhur,</span><br>
                         Disiplin Modern
                     </h1>
-<p class="font-body-lg text-body-lg text-on-surface max-w-2xl mx-auto md:mx-0 drop-shadow-md bg-background/40 p-4 rounded-lg backdrop-blur-sm border border-outline-variant/30">
+<p class="hidden sm:block font-body-lg text-body-lg text-on-surface max-w-2xl mx-auto md:mx-0 drop-shadow-md bg-background/40 p-4 rounded-lg backdrop-blur-sm border border-outline-variant/30">
                         Menggabungkan ketangguhan pencak silat tradisional dengan metodologi pelatihan modern berlandaskan nilai-nilai keislaman. Temukan kekuatan sejati Anda bersama kami di Jawa Barat.
                     </p>
 <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-4">
@@ -510,15 +510,15 @@ const HERO_SEQUENCE_CONFIG = {
   const indicator = document.getElementById('hero-scroll-indicator');
   const nav = document.querySelector('nav');
 
-  // "Desktop sungguhan" = layar lebar + mouse/trackpad. Cek pointer/hover tidak
-  // bisa dipalsukan oleh mode "Situs desktop" di browser HP (innerWidth bisa).
-  const isDesktop = window.matchMedia('(min-width: ' + C.mobileBreakpoint + 'px)').matches
-    && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  const isMobile = !isDesktop;
+  // Deteksi HP yang tahan mode "Situs desktop": layar fisik & sentuh tidak
+  // ikut dipalsukan seperti innerWidth.
+  const touch = (navigator.maxTouchPoints || 0) > 0 || 'ontouchstart' in window;
+  const physShort = Math.min(screen.width || 9999, screen.height || 9999);
+  const isMobile = window.innerWidth < C.mobileBreakpoint || (touch && physShort < 600);
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const saveData = !!(navigator.connection && navigator.connection.saveData);
-  // Mode statis: 1 frame, tinggi 1 layar, tanpa scroll-scrub. Semua non-desktop
-  // ikut statis — scrub 400vh terasa panjang & tidak jelas di layar kecil.
+  // Mode statis: 1 frame, tanpa scroll-scrub. Semua HP ikut statis —
+  // scrub 400vh terasa panjang & tidak jelas di layar kecil.
   const staticMode = reduceMotion || saveData || isMobile;
 
   const path = isMobile ? C.mobilePath : C.desktopPath;
@@ -531,8 +531,14 @@ const HERO_SEQUENCE_CONFIG = {
     return path + String(n).padStart(5, '0') + '.webp';
   }
 
-  // Track scroll hero: 400vh untuk scrub (desktop), 100vh saat statis (HP / reduced-motion).
-  section.style.height = staticMode ? '100vh' : C.heroScrollHeight;
+  // Track scroll hero: 400vh scrub (desktop) / 100vh statis (reduced-motion) /
+  // pita ringkas ~56vh di HP (bukan 1 layar penuh — terasa terlalu besar).
+  const heroMobileH = 'min(56vh, 30rem)';
+  section.style.height = staticMode ? (isMobile ? heroMobileH : '100vh') : C.heroScrollHeight;
+  if (staticMode && isMobile) {
+    const sticky = document.getElementById('hero-sticky');
+    if (sticky) sticky.style.height = heroMobileH;
+  }
 
   /* ---------------------------------------------------------------- canvas */
   const ctx = canvas.getContext('2d', { alpha: false });
