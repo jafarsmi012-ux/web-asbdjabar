@@ -485,8 +485,8 @@ const HERO_SEQUENCE_CONFIG = {
   mobileFrameCount: 80,
   desktopWidth: 1280,
   desktopHeight: 720,
-  mobileWidth: 640,
-  mobileHeight: 360,
+  mobileWidth: 720,
+  mobileHeight: 1280,
   heroScrollHeight: '400vh',   // tinggi track scroll hero
   mobileBreakpoint: 768,       // < 768px pakai sequence mobile
   concurrency: 6,              // request paralel saat preload progresif
@@ -558,15 +558,13 @@ const HERO_SEQUENCE_CONFIG = {
     requestLoop();
   }
 
-  // Desktop: cover-fit (isi viewport). Mobile portrait: contain/letterbox
-  // supaya seluruh scene 16:9 tetap terlihat (pesilat di kiri-kanan tidak terpotong).
+  // cover-fit manual. Frame desktop 16:9, frame mobile sudah 9:16 (blur-fill),
+  // jadi cover pas di kedua device tanpa memotong subjek.
   function paint(img) {
     if (!img || !cssW || !cssH) return;
-    const fit = isMobile ? Math.min : Math.max;
-    const scale = fit(cssW / img.naturalWidth, cssH / img.naturalHeight);
+    const scale = Math.max(cssW / img.naturalWidth, cssH / img.naturalHeight);
     const dw = img.naturalWidth * scale;
     const dh = img.naturalHeight * scale;
-    if (isMobile) { ctx.fillStyle = '#0b0908'; ctx.fillRect(0, 0, cssW, cssH); }
     ctx.drawImage(img, (cssW - dw) / 2, (cssH - dh) / 2, dw, dh);
   }
 
