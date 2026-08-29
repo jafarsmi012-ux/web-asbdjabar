@@ -917,7 +917,7 @@ fetch('data/pengumuman.json').then(r => r.json()).then(p => {
 
   const bar = document.getElementById('pengumuman');
   // Marquee: ulang isi sampai >= 2x lebar bar lalu animasi -50% = mulus tanpa
-  // celah di layar lebar. Kecepatan konstan (~70 px/dtk) apa pun ukuran layar.
+  // celah di layar lebar. Kecepatan konstan (~45 px/dtk) apa pun ukuran layar.
   const teks = document.getElementById('pengumuman-teks');
   const seg = esc(p.judul) + '<span class="mx-16 opacity-60">•</span>';
   function isiMarquee() {
@@ -929,7 +929,7 @@ fetch('data/pengumuman.json').then(r => r.json()).then(p => {
     teks.innerHTML = seg.repeat(k * 2);
     void teks.offsetWidth;               // reflow -> restart animasi bersih
     teks.style.animation = '';
-    teks.style.animationDuration = Math.max(6, (k * uw) / 70) + 's';
+    teks.style.animationDuration = Math.max(8, (k * uw) / 45) + 's';
   }
   isiMarquee();
   let _mrt;
