@@ -59,7 +59,8 @@
         body.has-pengumuman nav { top: 2.75rem; }
         body.has-pengumuman #hero-sticky { top: 2.75rem; }
         html:has(body.has-pengumuman) { scroll-padding-top: 8.25rem; }
-        /* Teks pengumuman berjalan (marquee) — isi digandakan, geser -50% = mulus */
+        /* Teks pengumuman berjalan (marquee) — isi diulang k*2x, geser -50% = mulus.
+           animation-duration di-set dari JS (kecepatan konstan lintas ukuran layar). */
         @keyframes pengumuman-run { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .pengumuman-run { display: inline-block; animation: pengumuman-run 14s linear infinite; }
         #pengumuman:hover .pengumuman-run, #pengumuman:focus-within .pengumuman-run { animation-play-state: paused; }
@@ -915,9 +916,24 @@ fetch('data/pengumuman.json').then(r => r.json()).then(p => {
   try { if (localStorage.getItem(kunci) === '1') return; } catch (e) {}
 
   const bar = document.getElementById('pengumuman');
-  // Isi digandakan (dengan pemisah) supaya marquee -50% mengulang mulus.
+  // Marquee: ulang isi sampai >= 2x lebar bar lalu animasi -50% = mulus tanpa
+  // celah di layar lebar. Kecepatan konstan (~70 px/dtk) apa pun ukuran layar.
+  const teks = document.getElementById('pengumuman-teks');
   const seg = esc(p.judul) + '<span class="mx-16 opacity-60">•</span>';
-  document.getElementById('pengumuman-teks').innerHTML = seg + seg;
+  function isiMarquee() {
+    teks.style.animation = 'none';
+    teks.innerHTML = seg;
+    const cw = teks.parentElement.offsetWidth || 320;
+    const uw = teks.scrollWidth || cw;
+    const k = Math.max(1, Math.ceil(cw / uw));
+    teks.innerHTML = seg.repeat(k * 2);
+    void teks.offsetWidth;               // reflow -> restart animasi bersih
+    teks.style.animation = '';
+    teks.style.animationDuration = Math.max(6, (k * uw) / 70) + 's';
+  }
+  isiMarquee();
+  let _mrt;
+  window.addEventListener('resize', function () { clearTimeout(_mrt); _mrt = setTimeout(isiMarquee, 200); }, { passive: true });
 
   const urlAman = /^(https?:\/\/|\/|#|mailto:)/.test(String(p.tautan_url || ''));
   const adaTombol = !!(p.tautan_label && urlAman);
