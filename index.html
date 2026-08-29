@@ -61,7 +61,7 @@
         html:has(body.has-pengumuman) { scroll-padding-top: 8.25rem; }
         /* Teks pengumuman berjalan (marquee) — isi digandakan, geser -50% = mulus */
         @keyframes pengumuman-run { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .pengumuman-run { display: inline-block; animation: pengumuman-run 20s linear infinite; }
+        .pengumuman-run { display: inline-block; animation: pengumuman-run 14s linear infinite; }
         #pengumuman:hover .pengumuman-run, #pengumuman:focus-within .pengumuman-run { animation-play-state: paused; }
         @media (prefers-reduced-motion: reduce) { .pengumuman-run { animation: none; } }
         a:focus-visible, button:focus-visible {
@@ -914,7 +914,7 @@ fetch('data/pengumuman.json').then(r => r.json()).then(p => {
 
   const bar = document.getElementById('pengumuman');
   // Isi digandakan (dengan pemisah) supaya marquee -50% mengulang mulus.
-  const seg = esc(p.judul) + '<span class="mx-10 opacity-60">•</span>';
+  const seg = esc(p.judul) + '<span class="mx-16 opacity-60">•</span>';
   document.getElementById('pengumuman-teks').innerHTML = seg + seg;
 
   const urlAman = /^(https?:\/\/|\/|#|mailto:)/.test(String(p.tautan_url || ''));
