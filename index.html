@@ -916,24 +916,24 @@ fetch('data/pengumuman.json').then(r => r.json()).then(p => {
   try { if (localStorage.getItem(kunci) === '1') return; } catch (e) {}
 
   const bar = document.getElementById('pengumuman');
-  // Marquee: ulang isi sampai >= 2x lebar bar lalu animasi -50% = mulus tanpa
-  // celah di layar lebar. Kecepatan konstan (~45 px/dtk) apa pun ukuran layar.
+  // Marquee: isi diulang sampai >= 2x lebar bar, animasi -50% = loop mulus.
+  // WAJIB diukur saat bar sudah tampil (kalau hidden, lebar = 0 -> berantakan).
   const teks = document.getElementById('pengumuman-teks');
   const seg = esc(p.judul) + '<span class="mx-16 opacity-60">•</span>';
   function isiMarquee() {
+    const cw = teks.parentElement.clientWidth;
+    if (!cw) return;                         // bar belum tampil / 0 lebar
     teks.style.animation = 'none';
     teks.innerHTML = seg;
-    const cw = teks.parentElement.offsetWidth || 320;
     const uw = teks.scrollWidth || cw;
-    const k = Math.max(1, Math.ceil(cw / uw));
+    const k = Math.max(2, Math.ceil(cw / uw) + 1);
     teks.innerHTML = seg.repeat(k * 2);
-    void teks.offsetWidth;               // reflow -> restart animasi bersih
+    void teks.offsetWidth;                   // reflow -> restart animasi bersih
     teks.style.animation = '';
-    teks.style.animationDuration = Math.max(8, (k * uw) / 45) + 's';
+    teks.style.animationDuration = Math.max(10, (k * uw) / 45) + 's';
   }
-  isiMarquee();
   let _mrt;
-  window.addEventListener('resize', function () { clearTimeout(_mrt); _mrt = setTimeout(isiMarquee, 200); }, { passive: true });
+  window.addEventListener('resize', function () { clearTimeout(_mrt); _mrt = setTimeout(isiMarquee, 150); }, { passive: true });
 
   const urlAman = /^(https?:\/\/|\/|#|mailto:)/.test(String(p.tautan_url || ''));
   const adaTombol = !!(p.tautan_label && urlAman);
@@ -977,6 +977,8 @@ fetch('data/pengumuman.json').then(r => r.json()).then(p => {
     try { localStorage.setItem(kunci, '1'); } catch (e) {}
   });
   terapkan(true);
+  // Isi marquee setelah bar benar-benar tampil & ter-layout.
+  requestAnimationFrame(() => requestAnimationFrame(isiMarquee));
 });
 fetch('data/sejarah.json').then(r => r.json()).then(({items}) => {
   if (!items || !items.length) return;   // kerangka kosong: section tetap tersembunyi
