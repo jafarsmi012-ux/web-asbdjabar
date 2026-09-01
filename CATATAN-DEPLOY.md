@@ -23,32 +23,31 @@ Setelah domain final, perbarui yang masih menyebut domain lama:
 
 ## 3. Form pendaftaran → Supabase
 
-Data pendaftar disimpan ke Supabase (Postgres). Situs statis menulis langsung
-lewat REST API — tanpa backend sendiri. Skala 5.000+ anggota masih di tier
-gratis/murah; tidak ada plafon jumlah baris.
+Data pendaftar disimpan ke **Supabase project ASBD Jabar yang sudah ada**
+(`gnlausjiwhpminjzlqiy` — sama dengan `app.asbdjabar.com` & app pelatih).
+Situs statis menulis langsung lewat REST API, tanpa backend sendiri.
 
-### 3a. Setup Supabase (sekali)
+### 3a. Buat tabel `pendaftar` (sekali)
 
-1. Buat project di https://supabase.com — pilih region **Singapore**
-   (residency data).
-2. SQL Editor → tempel isi `supabase/schema.sql` → **Run**. Membuat tabel
-   `pendaftar` + Row-Level Security (publik hanya boleh menambah, tidak baca).
-3. Settings → API → salin **Project URL** dan **anon public key**.
-4. Di `index.html` isi `SUPABASE_URL` dan `SUPABASE_ANON_KEY`. Kedua nilai ini
-   memang untuk dipublikasikan — RLS yang menjaga data, bukan kerahasiaan key.
-5. Ganti `WA_NOMOR = '6281234567890'` dengan nomor WhatsApp pengurus (format
-   internasional tanpa `+`). Nomor ini juga muncul di dua `href="wa.me/..."`
-   dan footer sebagai cadangan bila JS mati — ganti semuanya.
+1. **Backup dulu:** di repo `asbdjabar` jalankan `./backup.sh` (lihat komentar
+   file itu untuk connection string).
+2. Supabase → SQL Editor → tempel isi `asbdjabar/add_pendaftar.sql` → **Run**.
+   Membuat tabel `pendaftar` + RLS (anon INSERT-only, pengurus kelola semua).
+3. `SUPABASE_URL` & `SUPABASE_ANON_KEY` di `index.html` sudah terisi (anon key
+   aman dipublikasikan — RLS yang menjaga, bukan kerahasiaan key).
+4. Ganti `WA_NOMOR = '6281234567890'` dengan nomor WhatsApp pengurus (format
+   internasional tanpa `+`). Muncul juga di dua `href="wa.me/..."` dan footer
+   sebagai cadangan bila JS mati — ganti semuanya.
 
-Uji setelah deploy (ganti `XXX` + `ANON_KEY`):
+Uji setelah tabel dibuat:
 
-    curl -i -X POST 'https://XXX.supabase.co/rest/v1/pendaftar' \
-      -H 'apikey: ANON_KEY' -H 'Authorization: Bearer ANON_KEY' \
+    curl -i -X POST 'https://gnlausjiwhpminjzlqiy.supabase.co/rest/v1/pendaftar' \
+      -H 'apikey: <ANON_KEY>' -H 'Authorization: Bearer <ANON_KEY>' \
       -H 'Content-Type: application/json' \
-      -d '{"nama_calon":"Uji","nik":"0000000000000000","nama_wali":"Uji","hp_wali":"08123456789","persetujuan_wali":true}'
+      -d '{"nama_calon":"Uji","nik":"0000000000000000","jenis_kelamin":"L","nama_wali":"Uji","hp_wali":"08123456789","persetujuan_wali":true}'
 
-Harus balas `201`. Lalu `GET` endpoint yang sama harus balas `[]` (baca
-ditolak RLS). Hapus baris uji lewat Table Editor.
+Harus balas `201`. `GET` endpoint yang sama harus balas error/`[]` (baca
+ditolak RLS untuk anon). Hapus baris uji lewat Table Editor.
 
 ### 3b. Notifikasi pendaftaran baru
 
@@ -60,15 +59,13 @@ Pilih salah satu:
 - **Database Webhook** (Supabase): Database → Webhooks → webhook `INSERT` pada
   `pendaftar` yang POST ke Telegram/Discord/endpoint email. Tanpa ubah kode.
 
-### 3c. Kelola data & rencana profil
+### 3c. Kelola data & portal anggota
 
-Supabase → Table Editor. Kolom `status` (`baru` → `dihubungi` → `terdaftar`
-→ `batal`) untuk menandai progres; ekspor CSV dari situ.
+Pengurus verifikasi pendaftar dari **panel `app.asbdjabar.com`** (menu
+Pendaftar — status `baru` → `diverifikasi` / `ditolak` → `jadi_anggota`).
 
-Portal anggota (login mandiri, halaman profil, kartu anggota) menyusul —
-saat dibangun: tambah Supabase Auth + policy `select`/`update` untuk role
-`authenticated` yang dibatasi ke baris miliknya sendiri. Tidak perlu pindah
-database.
+Portal anggota (`anggota.asbdjabar.com`) — login, profil, foto, riwayat
+sabuk/UKT/kejuaraan — repo terpisah, Supabase yang sama.
 
 ## 4. Halaman hukum
 

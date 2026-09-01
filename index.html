@@ -323,7 +323,7 @@
 <h2 class="font-headline-xl text-headline-xl-mobile md:text-headline-xl text-on-surface uppercase tracking-tight mb-2" data-reveal>Daftar <span class="text-secondary-fixed">Anggota Baru</span></h2>
 <p class="font-body-md text-body-md text-on-surface-variant mb-8" data-reveal>Isi formulir di bawah ini. Pengurus akan menghubungi nomor wali yang didaftarkan.</p>
 
-<!-- Pendaftar disimpan ke Supabase via REST — lihat script di bawah + supabase/schema.sql -->
+<!-- Pendaftar -> tabel `pendaftar` di Supabase ASBD (skema: repo asbdjabar/add_pendaftar.sql) -->
 <form class="space-y-5" data-reveal id="form-daftar" method="POST" name="pendaftaran">
 <!-- honeypot anti-spam: bot mengisi, manusia tidak melihatnya -->
 <input name="botcheck" type="checkbox" class="hidden" style="display:none" tabindex="-1" autocomplete="off"/>
@@ -333,9 +333,19 @@
 <input class="w-full px-4 py-3 rounded-lg bg-surface-container border border-outline-variant/40 text-on-surface font-body-md text-body-md focus:outline-none focus:border-secondary-fixed transition-colors" id="f-nama" name="nama_calon" required type="text"/>
 </div>
 
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 <div>
 <label class="block font-label-bold text-label-bold text-on-surface mb-2" for="f-nik">NIK <span class="text-error">*</span></label>
 <input class="w-full px-4 py-3 rounded-lg bg-surface-container border border-outline-variant/40 text-on-surface font-body-md text-body-md focus:outline-none focus:border-secondary-fixed transition-colors" id="f-nik" name="nik" inputmode="numeric" pattern="[0-9]{16}" maxlength="16" placeholder="16 digit" required type="text"/>
+</div>
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface mb-2" for="f-jk">Jenis Kelamin <span class="text-error">*</span></label>
+<select class="w-full px-4 py-3 rounded-lg bg-surface-container border border-outline-variant/40 text-on-surface font-body-md text-body-md focus:outline-none focus:border-secondary-fixed transition-colors" id="f-jk" name="jenis_kelamin" required>
+<option value="">— pilih —</option>
+<option value="L">Laki-laki</option>
+<option value="P">Perempuan</option>
+</select>
+</div>
 </div>
 
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -1002,10 +1012,11 @@ fetch('data/sejarah.json').then(r => r.json()).then(({items}) => {
 // GANTI dengan nomor WhatsApp pengurus, format internasional tanpa tanda +.
 const WA_NOMOR = '6281234567890';
 
-// Supabase — penyimpanan pendaftar. Kedua nilai ini AMAN dipublikasikan:
+// Supabase (project ASBD Jabar — sama dgn app.asbdjabar.com). AMAN dipublikasikan:
 // RLS mengizinkan anon HANYA insert ke tabel pendaftar, tidak bisa baca/ubah.
-const SUPABASE_URL = 'https://GANTI.supabase.co';
-const SUPABASE_ANON_KEY = 'GANTI-DENGAN-ANON-KEY';
+// Tabel dibuat oleh asbdjabar/add_pendaftar.sql.
+const SUPABASE_URL = 'https://gnlausjiwhpminjzlqiy.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdubGF1c2ppd2hwbWluanpscWl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4Nzk3MzcsImV4cCI6MjA5NTQ1NTczN30.Jc2dlTRsVK7pcMzNcZUnqnRuESvij41Mdew-QncirlA';
 
 // Opsional — notifikasi email via https://web3forms.com. Biarkan apa adanya
 // bila notifikasi diatur lewat Database Webhook Supabase.
@@ -1030,6 +1041,7 @@ const FORM_ACCESS_KEY = 'GANTI-DENGAN-ACCESS-KEY';
       'Halo ASBD Jawa Barat, saya ingin mendaftarkan anggota baru.',
       'Nama calon: ' + (d.get('nama_calon') || '-'),
       'NIK: ' + (d.get('nik') || '-'),
+      'Jenis kelamin: ' + (d.get('jenis_kelamin') || '-'),
       'Tempat lahir: ' + (d.get('tempat_lahir') || '-'),
       'Tanggal lahir: ' + (d.get('tanggal_lahir') || '-'),
       'Sekolah/kelas: ' + (d.get('sekolah_kelas') || '-'),
@@ -1069,6 +1081,7 @@ const FORM_ACCESS_KEY = 'GANTI-DENGAN-ACCESS-KEY';
     const row = {
       nama_calon: f.get('nama_calon'),
       nik: f.get('nik'),
+      jenis_kelamin: f.get('jenis_kelamin') || null,
       tempat_lahir: f.get('tempat_lahir') || null,
       tanggal_lahir: f.get('tanggal_lahir') || null,
       sekolah_kelas: f.get('sekolah_kelas') || null,
