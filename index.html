@@ -323,7 +323,7 @@
 <h2 class="font-headline-xl text-headline-xl-mobile md:text-headline-xl text-on-surface uppercase tracking-tight mb-2" data-reveal>Daftar <span class="text-secondary-fixed">Anggota Baru</span></h2>
 <p class="font-body-md text-body-md text-on-surface-variant mb-8" data-reveal>Isi formulir di bawah ini. Pengurus akan menghubungi nomor wali yang didaftarkan.</p>
 
-<!-- Pendaftar -> tabel `pendaftar` di Supabase ASBD (skema: repo asbdjabar/add_pendaftar.sql) -->
+<!-- Pendaftar -> tabel `pendaftar` di Supabase ASBD (skema: anggota-asbdjabar/sql/add_pendaftar.sql) -->
 <form class="space-y-5" data-reveal id="form-daftar" method="POST" name="pendaftaran">
 <!-- honeypot anti-spam: bot mengisi, manusia tidak melihatnya -->
 <input name="botcheck" type="checkbox" class="hidden" style="display:none" tabindex="-1" autocomplete="off"/>
@@ -1015,7 +1015,7 @@ const WA_NOMOR = '6281234567890';
 
 // Supabase (project ASBD Jabar — sama dgn app.asbdjabar.com). AMAN dipublikasikan:
 // RLS mengizinkan anon HANYA insert ke tabel pendaftar, tidak bisa baca/ubah.
-// Tabel dibuat oleh asbdjabar/add_pendaftar.sql.
+// Tabel dibuat oleh anggota-asbdjabar/sql/add_pendaftar.sql.
 const SUPABASE_URL = 'https://gnlausjiwhpminjzlqiy.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdubGF1c2ppd2hwbWluanpscWl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4Nzk3MzcsImV4cCI6MjA5NTQ1NTczN30.Jc2dlTRsVK7pcMzNcZUnqnRuESvij41Mdew-QncirlA';
 

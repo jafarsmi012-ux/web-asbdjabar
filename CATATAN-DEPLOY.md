@@ -29,10 +29,11 @@ Situs statis menulis langsung lewat REST API, tanpa backend sendiri.
 
 ### 3a. Buat tabel `pendaftar` (sekali)
 
-1. **Backup dulu:** di repo `asbdjabar` jalankan `./backup.sh` (lihat komentar
-   file itu untuk connection string).
-2. Supabase → SQL Editor → tempel isi `asbdjabar/add_pendaftar.sql` → **Run**.
-   Membuat tabel `pendaftar` + RLS (anon INSERT-only, pengurus kelola semua).
+1. **Backup dulu:** di repo `anggota-asbdjabar` jalankan `sql/backup.sh` (lihat
+   komentar file itu untuk connection string).
+2. Supabase → SQL Editor → tempel isi `anggota-asbdjabar/sql/add_pendaftar.sql`
+   → **Run**. Membuat tabel `pendaftar` + RLS (anon INSERT-only, pengurus kelola
+   semua). Skema anggota lengkap: `add_anggota.sql` di folder yang sama.
 3. `SUPABASE_URL` & `SUPABASE_ANON_KEY` di `index.html` sudah terisi (anon key
    aman dipublikasikan — RLS yang menjaga, bukan kerahasiaan key).
 4. Ganti `WA_NOMOR = '6281234567890'` dengan nomor WhatsApp pengurus (format
